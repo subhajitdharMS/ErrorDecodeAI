@@ -1,0 +1,25 @@
+[project]
+name = "adf-monitor-agent"
+version = "0.1.0"
+description = "Sample FastAPI app that receives ADF/Synapse/Fabric pipeline failure notifications, analyzes error with Azure OpenAI, and sends Teams/email notifications."
+authors = [ { name = "Your Name" } ]
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+
+[project.dependencies]
+fastapi = "^0.111.0"
+uvicorn = "^0.30.0"
+httpx = "^0.27.0"
+pydantic = "^2.7.0"
+python-dotenv = "^1.0.1"
+azure-identity = "^1.17.0"
+azure-core = "^1.30.0"
+msal = "^1.28.0"
+
+[project.optional-dependencies]
+test = ["pytest", "pytest-asyncio", "anyio"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+pythonpath = ["app"]
