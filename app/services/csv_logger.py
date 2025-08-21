@@ -30,15 +30,20 @@ def _resolve_path() -> str:
     return settings.csv_log_path or os.path.join(os.getcwd(), "analysis_log.csv")
 
 def append_analysis(payload: NotificationPayload) -> Optional[str]:
-    # Backward-compatible wrapper; returns path only if logging is enabled and a row is written
+    # Wrapper to choose between CSV and ADLS logging
     settings = get_settings()
-    if not getattr(settings, "enable_csv_logging", False):
-        return None
-    path = _resolve_path()
-    try:
-        log_payload(payload)
-        return path
-    except Exception:
+    if getattr(settings, "enable_adls_logging", False):
+        from app.services.adls_logger import ADLSLogger
+        logger = ADLSLogger()
+        return logger.append_analysis(payload)
+    elif getattr(settings, "enable_csv_logging", False):
+        path = _resolve_path()
+        try:
+            log_payload(payload)
+            return path
+        except Exception:
+            return None
+    else:
         return None
 
 def log_payload(payload: NotificationPayload) -> None:
